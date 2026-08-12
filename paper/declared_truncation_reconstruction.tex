@@ -1,0 +1,855 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+
+\newcommand{\dk}{d/d k}
+\newcommand{\dt}{\partial_t}
+\newcommand{\Lt}{\tilde\Lambda}
+\newcommand{\Gt}{\tilde G}
+\newcommand{\lfour}{\lambda_4}
+\newcommand{\gp}{\bar{g}}
+
+\title{A Declared-Truncation Reconstruction of a 41-Coupling
+Gravity--Standard-Model FRG System: Verified Blocks, Joint Fixed Point, and
+Stability Spectrum}
+
+\author{C.~M.~Baird \and Zora}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We reconstruct, in a fully declared and auditable manner, the running-coupling
+system of a four-dimensional functional-renormalization-group (FRG) truncation
+that couples quantum gravity to Standard-Model matter and two real gauge-singlet
+scalars at mass dimension $d\le 6$.  The original archival claim of a
+$41$-running-coupling ultraviolet completion is not accompanied by an operator
+list, a beta-functional system, a fixed-point vector, or a stability matrix;
+rather than fabricating the missing input, we declare a $41$-coordinate basis,
+record a regulator, gauge, and projection convention for every block, and
+derive only those flows that trace to a written source or a documented
+projection.  Thirty-three of the forty-one beta functions are thereby supplied
+and verified: the Einstein--Hilbert--matter block of Don\`a, Eichhorn and
+Percacci; the nonminimal scalar--curvature system of Narain and Percacci; the
+scalar local-potential block at quartic and sixth order; and the
+curvature-squared block of Codello, Percacci and Rahmede.  The joint fixed
+point of the derived flow is the DEP Standard-Model fixed point
+$(\lambda_N,g_N)=(-4.7975,1.7621)$ with Gaussian matter.  The $33$-dimensional
+quantum-plus-canonical stability spectrum contains 8 relevant, 12 marginal,
+and 13 irrelevant directions; the two gravity exponents reproduce the
+published values $(3.961,1.644)$.  We also record a negative result: in the
+one-loop curvature-squared block the scaffold coordinate of the Weyl-squared
+coupling runs monotonically, so that block admits no fixed point in that
+parametrization.  Six derivative and gauge-portal operators remain undriven
+and are explicitly declared pending.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+The asymptotic-safety scenario for quantum gravity
+\cite{reuter,litim06,percacciBook} is one of the few quantum-gravity proposals
+that can be addressed quantitatively.  Within the functional renormalization
+group, the central object is the effective average action $\Gamma_k$, whose
+scale dependence is governed by the exact Wetterich equation
+\cite{wetterich,berges},
+\begin{equation}
+  \label{eq:wetterich}
+  \dt\Gamma_k[\Phi] = \frac12\,\mathrm{STr}\!\left[
+    \left(\Gamma_k^{(2)}[\Phi]+R_k\right)^{-1}\dt R_k\right],
+\end{equation}
+where $\Gamma_k^{(2)}$ is the second functional derivative (Hessian), $R_k$ a
+momentum cutoff (regulator), and $t=\ln(k/k_0)$ the logarithmic scale
+parameter.  In practice the equation is solved in truncated theory spaces, and
+every numerical claim carries a hidden load of choices: the operator basis,
+the regulator, the gauge fixing and ghost sector, and the projection
+background.
+
+This paper is the scientific write-up of a reconstruction exercise that began
+from a corpus claiming a $41$-running-coupling, dimension-$d\le 6$ truncation
+coupling gravity to the Standard Model plus two scalar singlets.  The
+claim was not accompanied by the mathematical objects needed to reproduce it:
+no complete operator list, no beta functions, no fixed-point vector, and no
+$41\times 41$ stability matrix.  The reconstruction therefore proceeds under a
+strict \emph{no-fabrication} protocol: every beta function must trace to a
+written source equation (with the paper, equation, gauge, and regulator
+recorded) or to an explicitly declared projection of a documented trace
+functional.  Coordinates without a traced flow are marked \texttt{NaN} (not
+set to zero), and the framework refuses to present the result as the
+historical $41$-coupling theory.  Instead it delivers a smaller, fully
+declared truncation whose content is \emph{verified}, together with an honest
+inventory of what remains undriven.
+
+The main results of this paper are:
+\begin{enumerate}
+  \item a declared $41$-coordinate basis with recorded conventions
+        (Sec.~\ref{sec:framework}, App.~\ref{app:operators});
+  \item five verified building blocks, each checked against its published
+        source (Sec.~\ref{sec:blocks});
+  \item the joint fixed point of the derived $33$-coordinate flow and its
+        stability spectrum, with 8 relevant, 12 marginal, and 13 irrelevant
+        directions (Sec.~\ref{sec:joint});
+  \item a recorded negative result in the curvature-squared sector
+        (Sec.~\ref{sec:r2}, Sec.~\ref{sec:discussion});
+  \item an explicit list of the six pending operators that remain undriven
+        (Sec.~\ref{sec:coverage}).
+\end{enumerate}
+
+Throughout, the numbers quoted are produced by the accompanying Python
+implementation, which is exercised by a unit-test suite; every table in this
+paper corresponds to a test or a fixed-point verification in that suite.
+
+\section{Framework, conventions, and controls}
+\label{sec:framework}
+
+\subsection{Fields, action, and the Wetterich equation}
+\label{sec:fields}
+
+We work in Euclidean signature in $d=4$ dimensions with a background-field
+formulation.  The field content is the metric $g_{\mu\nu}$, the Standard-Model
+fields, and two real gauge-singlet scalars $\Phi_c$ and $E$.  The flow
+equation is the Wetterich equation \eqref{eq:wetterich}; the Hessian is
+constructed covariantly, background-covariant gauge fixing with
+Faddeev--Popov ghosts is used, and a specific regulator and projection
+background must be recorded with every numerical result.  The implementation
+adopts the optimized (Litim) shape \cite{litim01},
+\begin{equation}
+  \label{eq:litim}
+  R_k(q^2)=\left(k^2-q^2\right)\theta\!\left(k^2-q^2\right),
+\end{equation}
+except in the gravity--matter block of Sec.~\ref{sec:dep}, which uses the
+type-II cutoff of its source paper; the two regulator families are never mixed
+in one solve.
+
+\subsection{The declared 41-coordinate basis}
+\label{sec:basis}
+
+The coordinates follow \texttt{model.NAMES} in order:
+\begin{enumerate}[label=\arabic*.]
+  \item $g_N$: dimensionless Newton coupling (Einstein--Hilbert, $R$).
+  \item $\lambda_N$: dimensionless cosmological term.
+  \item $a_{R^2}$, $a_{C^2}$: $R^2$ and Weyl-squared coordinates.
+  \item--7.\quad $g_1,g_2,g_3$: Standard-Model gauge couplings.
+  \item--10.\quad $y_t,y_b,y_\tau$: third-generation Yukawas.
+  \item--16.\quad $\lambda_H,m_H^2$; $\lambda_\Phi,m_\Phi^2$; $\lambda_E,m_E^2$:
+        quartics and masses of the Higgs and the two singlets.
+  \item--19.\quad $\kappa_{\Phi E}$, $\kappa_{H\Phi}$, $\kappa_{HE}$:
+        quartic portals $\Phi_c^2E^2$, $|H|^2\Phi_c^2$, $|H|^2E^2$.
+  \item--22.\quad $\xi_H,\xi_\Phi,\xi_E$: nonminimal couplings
+        $R|H|^2$, $R\Phi_c^2$, $R E^2$.
+  \item--25.\quad $Z_h,Z_\phi,Z_E$: wave-function renormalizations.
+  \item--35.\quad ten scalar dimension-six potentials: $|H|^6$, $\Phi^6$,
+        $E^6$, $|H|^4\Phi^2$, $|H|^4E^2$, $|H|^2\Phi^4$, $|H|^2E^4$,
+        $\Phi^4E^2$, $\Phi^2E^4$, $|H|^2\Phi^2E^2$ (implementation names
+        $c_{H6}\ldots c_{H2\Phi2E2}$).
+  \item--38.\quad derivative dimension-six operators: $|H|^2\Box|H|^2$,
+        $\Phi^2\Box\Phi^2$, $E^2\Box E^2$ ($c_{H\Box},c_{\Phi\Box},c_{E\Box}$).
+  \item--41.\quad gauge-strength portals $|H|^2F^2$, $\Phi^2F^2$, $E^2F^2$
+        ($c_{HF^2},c_{\Phi F^2},c_{EF^2}$).
+\end{enumerate}
+The full table with physical definitions is collected in
+App.~\ref{app:operators}.
+
+\subsection{Canonical scaling and the no-fabrication control}
+\label{sec:canonical}
+
+Every dimensionless coupling receives its canonical contribution.  For a
+coupling $g_i$ whose mass dimension is $[g_i]$, the canonical term is
+$- [g_i]\, g_i$; the non-vanishing entries are
+\begin{equation}
+  \label{eq:canonical}
+  \beta_{g_N}\supset +2\,g_N,\qquad
+  \beta_{\lambda_N}\supset -2\,\lambda_N,\qquad
+  \beta_{m_i^2}\supset -2\,m_i^2,\qquad
+  \beta_{c_\bullet}\supset +2\,c_\bullet ,
+\end{equation}
+with $c_\bullet$ any dimension-six coordinate (the projected sextic
+couplings carry mass dimension $-2$, since the background field carries mass
+dimension $1$).  All other coordinates are dimensionless ($[g_i]=0$).
+
+The no-fabrication control is implemented at the code level: assembling the
+full $41$-vector beta function without a complete projected quantum
+contribution raises \texttt{IncompleteFlowError}; entries for which no traced
+projection exists are \texttt{NaN}, never silently zero.  A valid fixed-point
+claim must make all $41$ residuals small, and the stability matrix must be the
+Jacobian of the declared flow with a stated critical-exponent sign
+convention.
+
+\subsection{Residuals, stability matrices, and critical exponents}
+\label{sec:methods}
+
+All stability results in this paper use the numerical central-difference
+Jacobian of the declared flow, evaluated at the point of interest with step
+$\delta$; the critical exponents are the eigenvalues of the Jacobian with the
+convention
+\begin{equation}
+  \label{eq:theta}
+  \theta = -\mathrm{eig}\!\left(\partial \beta_i/\partial g_j\right),
+\end{equation}
+so that a positive real part means a relevant (UV-attractive) direction.
+Fixed-point residuals are quoted as $|\beta_i|$ at the point.
+
+\section{Verified building blocks}
+\label{sec:blocks}
+
+\subsection{Einstein--Hilbert gravity coupled to Standard-Model matter
+(DEP block)}
+\label{sec:dep}
+
+The gravity--matter block follows Don\`a, Eichhorn and Percacci
+\cite{dep14} (arXiv:1311.2898).  Its convention label is
+\texttt{DEP-TYPEII}: type-II cutoff with shape parameters $\alpha=\rho=1$, the
+table ghost factor $2\,2^{[d/2]}$, and minimal coupling of matter.  The block
+uses the scalar--fermion--gauge content of the Standard Model ($n_s=4$ Higgs
+real components, $n_f$ fermions, $n_v$ gauge fields); in this reconstruction
+$n_s=4$, $n_f=45/2$ per the standard count, and $n_v=12$, plus the two real
+singlets.  The anomalous dimensions of the DEP block are the coupled solution
+$\eta_h,\eta_\phi,\eta_E,\eta_V$ of the source equations.
+
+In the scaffold coordinates of this project, $g_N=\Gt$ and
+$\lambda_N=2\Lt$, so
+\begin{equation}
+  \label{eq:scaffold}
+  \beta_{g_N}=\beta_{\Gt},\qquad
+  \beta_{\lambda_N}=2\,\beta_{\Lt},
+\end{equation}
+where $(\Lt,\Gt)=(\Lambda k^{-2}, G k^{d-2})$ are the couplings of
+Ref.~\cite{dep14}.  The block reproduces the published pure-gravity fixed
+point $(\Lt,\Gt)=(0.01046,0.7725)$ and the Standard-Model row
+$(\Lt,\Gt)=(-2.399,1.762)$.  In the unimproved (table) treatment used here the
+Standard-Model fixed point is
+\begin{equation}
+  \label{eq:depfp}
+  \Lt_*=-2.3987548,\qquad \Gt_*=1.7621271,\qquad
+  \theta=(3.9609,\;1.6436),
+\end{equation}
+with $\eta_h\simeq 0.269$ and $\eta_s\simeq -0.076$ at the fixed point.  The
+improved (self-consistent $\eta$) treatment yields
+$(\Lt_*,\Gt_*)=(-2.4644,1.7951)$ and $\theta=(3.9988,1.6377)$; the table
+convention is used throughout this paper because it is the convention under
+which the source's published exponent table is reproduced.  All numbers are
+regulator- and gauge-dependent.
+
+\subsection{The Litim Einstein--Hilbert benchmark}
+\label{sec:litim}
+
+As a cross-check of the fixed-point machinery, the pure Einstein--Hilbert
+truncation with the optimized cutoff \cite{litim01,litim06} is implemented in
+its own normalization ($g_{eq}=c_d\,g_N$, $c_4=24\pi$, $\alpha\to\infty$).
+The known result is reproduced exactly:
+\begin{equation}
+  \label{eq:litimfp}
+  \lambda_N^*=\frac14,\qquad g_N^*=\frac{1}{1536\pi},\qquad
+  \theta=\frac53\pm \frac{i\sqrt{167}}{3}.
+\end{equation}
+This block is kept deliberately separate from the DEP convention; its only
+role is to certify the Jacobian and eigenvalue pipeline.
+
+\subsection{Nonminimal scalar--curvature couplings (Narain--Percacci block)}
+\label{sec:np}
+
+The nonminimal couplings $\xi_H,\xi_\Phi,\xi_E$ follow the closed-form
+five-coupling scalar--tensor system of Narain and Percacci
+\cite{narain10} (arXiv:0911.0386), convention label \texttt{NP-DE-DONDER-TYPEA}:
+$d=4$, de-Donder gauge, optimized cutoff, one real scalar.  The couplings are
+defined by
+\begin{equation}
+  \label{eq:npaction}
+  V=k^d\sum_{n}\lambda_{2n}\,\tilde\phi^{2n},\qquad
+  F=k^{d-2}\sum_{n}\xi_{2n}\,\tilde\phi^{2n},\qquad
+  \tilde\phi=\phi\,k^{-(d-2)/2},
+\end{equation}
+so that in $d=4$, $\lambda_2=m^2/k^2$ and $\lambda_4$ is the dimensionless
+quartic coefficient of $\phi^4$.  The system is implicit: the anomalous
+dimension $\eta=\dt\xi_0/\xi_0$ is fixed by the $\xi_0$ flow, and
+$\dt\xi_2$ appears linearly in the $\lambda_2$, $\xi_2$ and $\lambda_4$
+flows.  Writing $\beta_{\xi_0}=X+\eta\,Y$, the implicit condition
+$\dt\xi_0=(\eta-2)\xi_0$ is solved algebraically as
+\begin{equation}
+  \label{eq:solveeta}
+  \eta=\frac{X+2\xi_0}{\xi_0-Y},
+\end{equation}
+with ($\lambda_0,\xi_0$ the dimensionless $R$ and $R\phi^2$ couplings of the
+paper)
+\begin{align}
+  \label{eq:XY}
+  X&=-2\xi_0+\frac{1}{384\pi^2}\Bigg[
+    25-\frac{4}{1+2\lambda_2}
+    -\frac{24\,\xi_2}{(1+2\lambda_2)^2}
+    +\frac{8\xi_0\,(7\xi_0-2\lambda_0)}{(\xi_0-\lambda_0)^2}\Bigg],\\
+  Y&=\frac{1}{1152\pi^2}\,
+    \frac{17\xi_0^2+18\xi_0\lambda_0-15\lambda_0^2}{(\xi_0-\lambda_0)^2},
+\end{align}
+and
+\begin{align}
+  \label{eq:betalam0}
+  \beta_{\lambda_0}&=-4\lambda_0+\frac{1}{32\pi^2}
+    \Bigg[2+\frac{1}{1+2\lambda_2}+\frac{6\lambda_0}{\xi_0-\lambda_0}\Bigg]
+    +\frac{\eta}{96\pi^2}\,\frac{5\xi_0-2\lambda_0}{\xi_0-\lambda_0},\\
+  \label{eq:betaxi0}
+  \beta_{\xi_0}&=-2\xi_0+X+\eta\,Y .
+\end{align}
+The remaining three flows $\beta_{\lambda_2}$, $\beta_{\xi_2}$, $\beta_{\lfour}$
+are closed forms in $(\lambda_0,\xi_0,\lambda_2,\xi_2,\lfour,\eta)$; the
+$\xi_2$ flow is solved for the implicit $\dt\xi_2$ term,
+\begin{equation}
+  \label{eq:xi2implicit}
+  \beta_{\xi_2}=\frac{Z+\eta\,W}{1-V/\xi_0},
+\end{equation}
+and $\beta_{\lambda_2}$, $\beta_{\lfour}$ contain the solved $\dt\xi_2$
+combination.  The full forms are listed in
+App.~\ref{app:np}.
+
+The two-coupling gravity sector (GMFP) of the paper is reproduced exactly:
+\begin{equation}
+  \label{eq:gmfp}
+  \lambda_0^*=0.0086200674,\qquad \xi_0^*=0.0237546805,\qquad
+  \theta=2.1426\pm 2.8795\,i,
+\end{equation}
+with eigenvector $(0.3557\pm 0.3776\,i,\;0.8549)$, obtained from the numerical
+Jacobian of \eqref{eq:solveeta}--\eqref{eq:betaxi0}; $\eta=2$ at the fixed
+point.  The paper's own closed-form stability-matrix entries $M_{00}$ do not
+equal the numerical derivatives of the appendix flows at the GMFP
+($M_{\lambda_0\lambda_0}$ differs by exactly $+4$, $M_{\xi_0\xi_0}$ by
+$\approx-2.14$); the published exponents and eigenvectors are reproduced by
+the flow-derived Jacobian, and the paper itself notes transcription errors in
+its precursor.  We therefore use the closed-form flows and numerical
+Jacobians only, and record the discrepancy.
+
+The scaffold wiring evaluates the $\xi_2$ flow per species on the GMFP
+background of \eqref{eq:gmfp} with its exact fixed-point value $\eta=2$, and
+maps
+\begin{equation}
+  \label{eq:npwiring}
+  \lambda_2=m_i^2,\qquad \xi_2=\xi_i,\qquad
+  \lambda_4=\lambda_i/4
+  \qquad(i=H,\Phi,E),
+\end{equation}
+from $V=\lambda_i/4\,(\phi^2)^2$ for the radial field.  Because the
+background is fixed at the NP GMFP, the $\xi$ entries do not mix the NP gauge
+with the DEP gravity block; the two convention labels never coexist in one
+solve.  At Gaussian matter ($\lambda_2=\xi_2=\lfour=0$) the $\xi$ flow
+vanishes (residual $\sim 10^{-16}$), so $\xi_i^*=0$ is an exact fixed point of
+this block.
+
+\subsection{The scalar local-potential block: masses, quartics, wave
+functions}
+\label{sec:lpa}
+
+The six real scalars (four Higgs components, $\Phi_c$, $E$) are described by a
+local potential $U_k(h,\Phi,E)$ whose Hessian on a constant background
+$\varphi$ is
+\begin{equation}
+  \label{eq:hessian}
+  m^2_{ab}(\varphi)=m^2_{ab}(0)
+  +\tfrac12\,\lambda_{abcd}\,\varphi_c\varphi_d
+  +\tfrac{1}{24}\,c_{abcdef}\,\varphi_c\varphi_d\varphi_e\varphi_f ,
+\end{equation}
+where $\lambda_{abcd}$ is the quartic tensor and $c_{abcdef}$ the sextic
+tensor of App.~\ref{app:sextic}.  With the optimized regulator
+\eqref{eq:litim}, the scalar contribution to the flow of the potential is the
+constant-background trace
+\begin{equation}
+  \label{eq:trace}
+  \dt U_k\big|_{\mathrm{scalar}}
+  =\frac{k^4}{32\pi^2}\sum_{a=1}^{6}\Big(1+\frac{m^2_a(\varphi)}{k^2}\Big)^{-1},
+\end{equation}
+with $m^2_a$ the eigenvalues of \eqref{eq:hessian}.  Projecting at zero field
+gives the quantum contributions to the masses and quartics,
+\begin{equation}
+  \label{eq:quarticprojections}
+  \beta_{m_i^2}\supset \frac{\partial^2 \dt U_k}{\partial \varphi_i^2}\Big|_0,\qquad
+  \beta_{\lambda_i}\supset \frac{1}{6}\,\frac{\partial^4 \dt U_k}
+  {\partial \varphi_i^4}\Big|_0,\qquad
+  \beta_{\kappa_{ij}}\supset \frac{\partial^4 \dt U_k}
+  {\partial \varphi_i^2\,\partial\varphi_j^2}\Big|_0 ,
+\end{equation}
+computed with mixed finite-difference stencils whose step is checked against
+an analytic toy derivative.  The Gaussian point is an exact fixed point of
+this block, and the fourth-order projections match the analytically known
+one-scalar flow.  The wave-function coordinates are driven by the DEP
+anomalous dimensions of Sec.~\ref{sec:dep},
+\begin{equation}
+  \label{eq:Zflow}
+  \beta_{Z_i}=-\eta_s\,Z_i \qquad (i=h,\phi,E),
+\end{equation}
+with $\eta_s\simeq -0.076$ at the Standard-Model fixed point, so $Z_i^*=0$.
+
+\subsection{Dimension-six scalar potentials (sextic LPA)}
+\label{sec:sextic}
+
+The ten scalar dimension-six potentials are projected from the same trace
+\eqref{eq:trace} with the sixth-order potential.  The normalization
+convention assigns a factor $1/2^{a+b+c}$ to every monomial
+$(h^2)^a(\Phi^2)^b(E^2)^c$ with $a+b+c=3$, the same ``two per invariant
+factor'' rule that fixes the quartic sector ($\lambda_H/4\,(h^2)^2$,
+$\kappa_{H\Phi}/4\,(h^2)\Phi^2$).  The projections are
+\begin{equation}
+  \label{eq:sexticprojections}
+  c_{H6}=\frac{1}{90}\,\frac{\partial^6\dt U_k}{\partial h^6}\Big|_0,\qquad
+  c_{H4\Phi2}=\frac{1}{6}\,\frac{\partial^4\partial^2\dt U_k}
+  {\partial h^4\,\partial\Phi^2}\Big|_0,\qquad
+  c_{H2\Phi2E2}=\frac{\partial^2\partial^2\partial^2\dt U_k}
+  {\partial h^2\,\partial\Phi^2\,\partial e^2}\Big|_0,
+\end{equation}
+and cyclically; the $O(4)$ combinatorics of the Higgs sector are fixed by the
+sextic tensor of App.~\ref{app:sextic}, which is validated by a unit test
+that reconstructs every monomial of the potential from the tensor at
+generic couplings.  The finite-difference step is chosen in the convergence
+plateau ($\delta\simeq 5\times10^{-2}$; values at $\delta=3\times10^{-2}$ and
+$7\times10^{-2}$ agree to a few percent).  The block passes three controls:
+it reduces exactly to the quartic flow at vanishing sextics; the pure-toy
+derivatives $\partial^6/\partial h^6=720$, $\partial^4\partial^2=144$,
+$\partial^2\partial^2\partial^2=48$ are reproduced; and all ten entries
+vanish at the Gaussian point to the stencil noise floor
+($\sim 10^{-11}$).
+
+\subsection{The curvature-squared sector and its negative result}
+\label{sec:r2}
+
+The $R^2$ sector follows Codello, Percacci and Rahmede
+\cite{cpr09} (arXiv:0805.2909), one-loop approximation with the type-III
+generalized optimized cutoff and the Shapiro gauge choice that makes the
+quadratic action minimal fourth order.  The action ansatz is
+\begin{equation}
+  \label{eq:cpr}
+  S=\int \sqrt{g}\,\Big[
+    \frac{1}{2\lambda}\,C^2+\frac{1}{\xi}\,R^2-\frac{1}{\rho}\,E\Big],
+\end{equation}
+with $C^2$ the Weyl-squared, $E$ the Euler density, and beta functions
+\begin{equation}
+  \label{eq:cprbetas}
+  \beta_\lambda=-\frac{133}{10}\frac{\lambda^2}{(4\pi)^2},\qquad
+  \beta_\xi=-\frac{10\lambda^2-5\lambda\xi+5\xi^2/36}{(4\pi)^2},\qquad
+  \beta_\rho=\frac{196}{45}\frac{\rho^2\lambda}{(4\pi)^2}.
+\end{equation}
+In the ratios $\omega=-3\lambda/\xi$ and $\theta=\lambda/\rho$ the fixed
+points are $\omega_*\in\{-5.467,-0.0228\}$ and $\theta_*=56/171\simeq 0.3275$;
+the $\omega$ conversion is exactly consistent with \eqref{eq:cprbetas} via the
+chain rule (checked algebraically and numerically).  We record the
+paper-internal caveat that the printed $\beta_\theta$ does not follow from
+$\beta_\rho$ by the chain rule; the $\theta$ sector is decoupled at this
+order, so the discrepancy affects no wired coordinate, and
+$\theta_*=56/171$ is used as printed.
+
+The scaffold coordinates are the inverse couplings
+\begin{equation}
+  \label{eq:scaffoldr2}
+  a_{R^2}=\frac{1}{\xi},\qquad a_{C^2}=\frac{1}{2\lambda},
+\end{equation}
+defined only for $\lambda\neq 0$ (singular at the Gaussian point).  From
+\eqref{eq:cprbetas},
+\begin{equation}
+  \label{eq:scaffoldbetas}
+  \beta_{a_{C^2}}=\frac{133}{320\,\pi^2}\approx 0.04211\;(>0,\ \text{constant}),
+  \qquad
+  \beta_{a_{R^2}}=\frac{10x^2-5x+5/36}{(4\pi)^2},\qquad
+  x=\frac{a_{R^2}}{2a_{C^2}}.
+\end{equation}
+$\beta_{a_{R^2}}$ vanishes on the two lines $a_{R^2}=2x\,a_{C^2}$ with
+$x\in\{0.0295207,\,0.4704793\}$, but $\beta_{a_{C^2}}$ is strictly positive
+and constant, so the Weyl-squared direction runs monotonically and the
+$(a_{R^2},a_{C^2})$ subsystem has no fixed point in this parametrization.  We
+record this as a negative result, not a papered-over gap.  Physically, the
+underlying flow \eqref{eq:cprbetas} has its Gaussian point at
+$\lambda=\xi=0$ (the Weyl-squared coupling is asymptotically free in the
+one-loop approximation), and the inverse parametrization diverges there; the
+conclusion is a statement about the scaffold coordinates, which are the ones
+used in the $41$-coordinate basis.
+
+\section{The joint fixed point}
+\label{sec:joint}
+
+\subsection{Fixed-point vector and residuals}
+\label{sec:fpvector}
+
+Assembling the blocks of Sec.~\ref{sec:blocks} into
+\texttt{beta\_partial} (33 of the 41 entries finite; the remaining 8 are
+\emph{pending}, Sec.~\ref{sec:coverage}), the joint fixed point of the
+derived flow is
+\begin{equation}
+  \label{eq:jointfp}
+  (\lambda_N,\,g_N)=(-4.7975095,\,1.7621271),
+  \qquad
+  \text{all other 31 derived coordinates }=0,
+\end{equation}
+i.e.\ the DEP Standard-Model row \eqref{eq:depfp} with the matter sector at
+its Gaussian point.  The residuals at \eqref{eq:jointfp} are: gravity and
+matter entries zero to machine precision; $\xi_i$ entries $\sim 10^{-16}$
+(exact fixed point of the NP block, Sec.~\ref{sec:np}); dimension-six entries
+$\sim 10^{-11}$ (the finite-difference noise floor of the sextic
+projections).  The joint fixed point is therefore a genuine fixed point of
+the derived flow to the numerical accuracy of the projections.
+
+\subsection{The 33-dimensional stability spectrum}
+\label{sec:spectrum}
+
+The stability matrix is the numerical central-difference Jacobian of the
+derived flow restricted to the 33 derived coordinates, evaluated at
+\eqref{eq:jointfp}.  Two conventions are reported: the quantum-only
+Jacobian of \texttt{beta\_partial}, and the quantum-plus-canonical Jacobian
+with the canonical terms \eqref{eq:canonical} added for the mass-squared and
+dimension-six entries (the DEP gravity block contains its own canonical
+terms; all other matter couplings are dimensionless).  The
+quantum-plus-canonical spectrum is the physically relevant one and is
+displayed in Table~\ref{tab:spectrum}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Quantum-plus-canonical critical exponents
+  $\theta=-\mathrm{eig}(\partial\beta/\partial g)$ of the 33-dimensional
+  derived flow at the joint fixed point \eqref{eq:jointfp}.}
+  \label{tab:spectrum}
+  \begin{tabular}{lcc l}
+    \toprule
+    $\theta$ & multiplicity & class & directions \\
+    \midrule
+    $+3.9609$   & 1 & relevant & $\Lambda$-direction ($\lambda_N$) \\
+    $+2.8554$   & 3 & relevant & $m_H^2$, $m_\Phi^2$, $m_E^2$ \\
+    $+2.0000$   & 3 & relevant & $\xi_H$, $\xi_\Phi$, $\xi_E$ \\
+    $+1.6436$   & 1 & relevant & $\tilde G$-direction ($g_N$) \\
+    $0.0000$    & 12 & marginal & $g_1,g_2,g_3,y_t,y_b,y_\tau$ and the six quartics \\
+    $-0.0756$   & 3 & irrelevant & $Z_h,Z_\phi,Z_E$ \\
+    $-2.0000$   & 10 & irrelevant & the ten dimension-six potentials \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The two gravity eigenvalues reproduce the DEP table-convention exponents
+$(3.961,1.644)$ of \eqref{eq:depfp} exactly.  The counting is
+\begin{equation}
+  \label{eq:counting}
+  \underbrace{8}_{\text{relevant}}\;+\;
+  \underbrace{12}_{\text{marginal}}\;+\;
+  \underbrace{13}_{\text{irrelevant}}\;=\;33 .
+\end{equation}
+
+\subsection{Interpretation}
+\label{sec:interpretation}
+
+The spectrum has a transparent block structure.
+\begin{itemize}
+  \item \emph{Gravity.} The two exponents $+3.9609$ and $+1.6436$ are the
+        DEP eigenvalues, unchanged by the (Gaussian) matter sector; they
+        confirm that the fixed point is UV attractive in the
+        Einstein--Hilbert directions.
+  \item \emph{Mass-squared directions.} $\theta=2.8554=2+0.8554$: the
+        canonical weight $+2$ (from $-[m_i^2]=+2$ per
+        \eqref{eq:canonical}, i.e.\ $\beta_{m^2}\supset -2m^2$) is augmented
+        by a quantum shift from the scalar one-loop traces of
+        Secs.~\ref{sec:lpa}--\ref{sec:sextic} evaluated at the Standard-Model
+        row of the DEP block.  The three masses are relevant with identical
+        exponents.
+  \item \emph{Nonminimal couplings.} $\theta=2.0000$ exactly for all three
+        $\xi_i$: at the NP GMFP background with $\eta=2$ the $\xi_2$ flow
+        \eqref{eq:xi2implicit} has an exact linear coefficient, and the
+        $\xi_i$ directions inherit it.  This is a pure quantum result; the
+        $\xi_i$ have canonical weight zero.
+  \item \emph{Marginal matter couplings.} The twelve coordinates
+        $g_1,g_2,g_3,y_t,y_b,y_\tau$ and the six quartic couplings
+        $\lambda_H,\lambda_\Phi,\lambda_E,\kappa_{H\Phi},\kappa_{HE},
+        \kappa_{\Phi E}$ have vanishing eigenvalues: at Gaussian matter every
+        one-loop contribution is of higher order in the couplings (the
+        quartic and Yukawa beta functions have no linear terms in the
+        respective couplings, and the gauge beta functions vanish at zero
+        gauge coupling), and the canonical weights are zero.  The stability
+        matrix does not lift their degeneracy at this point, a well-known
+        feature of Gaussian matter sectors.
+  \item \emph{Wave functions.} $\theta=-0.0756=-\eta_s$ with
+        $\eta_s\simeq-0.076$ from \eqref{eq:Zflow}; the $Z_i$ are irrelevant
+        and the fixed point is $Z_i^*=0$.
+  \item \emph{Dimension-six potentials.} $\theta=-2.0000$ exactly: pure
+        canonical scaling \eqref{eq:canonical}; the quantum parts vanish at
+        Gaussian matter to the stencil floor, so all ten operators are
+        irrelevant at this fixed point.
+\end{itemize}
+
+The structure is consistent with the expectation for an interacting
+gravity--matter fixed point with Gaussian matter: the gravity sector
+controls the flow, the masses and nonminimal couplings are relevant, and all
+higher-dimensional scalar operators are irrelevant.
+
+\section{Coverage, limitations, and pending directions}
+\label{sec:coverage}
+
+Thirty-three of the 41 coordinates are derived and verified:
+\begin{itemize}
+  \item \texttt{beta\_partial} (quantum-only, DEP gravity + SM matter +
+        scalar LPA + NP $\xi$ + sextic LPA): entries 0--1 (gravity),
+        5--19 (SM gauge/Yukawa/quartics/portals), 20--22 ($\xi_i$),
+        23--25 ($Z_i$), 26--35 (dimension-six potentials), plus the scalar
+        LPA mass entries 11,13,15.
+  \item The remaining coordinates are \emph{pending} and return \texttt{NaN}:
+        $a_{R^2},a_{C^2}$ (handled by the negative result of
+        Sec.~\ref{sec:r2}); the derivative operators $c_{H\Box},c_{\Phi\Box},
+        c_{E\Box}$ (not projectable by a constant-background LPA); and the
+        gauge-strength portals $c_{HF^2},c_{\Phi F^2},c_{EF^2}$ (require a
+        dressed-gauge-sector trace).
+\end{itemize}
+No flow value is fabricated for the pending coordinates, and the framework
+refuses to present a $41$-dimensional fixed-point claim.  Every numerical
+result is accompanied by its convention label, and the unit-test suite pins
+each verified number.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The reconstruction illustrates a methodological point that is often
+understated: in the FRG, a coupling is not ``there'' until its projected
+flow is written down.  The $41$-coordinate claim that motivated this project
+contains no operator list, no beta functions, no fixed-point vector, and no
+stability matrix; we have therefore delivered a smaller system (33 derived
+coordinates) in which every object is written down, sourced, and verified.
+The main physics findings are:
+
+\begin{enumerate}
+  \item The joint fixed point of the derived flow is the DEP
+        Standard-Model fixed point with Gaussian matter.  Its spectrum has
+        exactly 8 relevant, 12 marginal, and 13 irrelevant directions.  The
+        gravity eigenvalues are the DEP values $(3.961,1.644)$; the masses
+        and nonminimal couplings are relevant; the ten dimension-six scalar
+        operators are irrelevant by canonical scaling alone.
+  \item The $\xi_i$ directions are exact: the Narain--Percacci GMFP
+        background with $\eta=2$ forces $\theta=2$ and an exact Gaussian
+        fixed point of the nonminimal sector.  This is a clean, verifiable
+        sub-result and a nontrivial consistency check between the two
+        published blocks.
+  \item The curvature-squared sector has no fixed point in the scaffold
+        parametrization \eqref{eq:scaffoldr2}: $\beta_{a_{C^2}}>0$ constant.
+        In the original couplings the Weyl-squared direction is asymptotically
+        free toward the Gaussian point; the negative result is a property of
+        the inverse coordinates used in the basis.  We record it explicitly,
+        because an unguarded reader of the scaffold might otherwise search
+        for a fixed point that does not exist.
+  \item The twelve marginal matter couplings (gauge, Yukawa, quartic) at
+        Gaussian matter are not a prediction of fixed values; they are the
+        statement that the stability matrix is degenerate in those
+        directions at the Gaussian point.  A fully interacting matter fixed
+        point would require the coupled matter beta functions away from the
+        Gaussian point, which is outside the currently derived system.
+\end{enumerate}
+
+\emph{Limitations.} (i) All gravity and matter blocks are one-loop
+(threshold-functional) or LPA-level; there is no fermion trace in the scalar
+projections, no dressed gauge sector, and no derivative (curvature-squared or
+box-type) projection for matter.  (ii) The pending coordinates are not
+fabricated; the joint fixed point is a statement about the 33 derived
+coordinates only.  (iii) The conventions (type-II vs.\ optimized regulator,
+de-Donder vs.\ type-A gauge, table vs.\ improved ghost factors) are
+deliberately separated; mixing them would produce numbers that are neither
+paper's.  (iv) The NP $M_{00}$ discrepancy and the CPR $\beta_\theta$
+inconsistency are recorded paper-internal observations; both are resolved in
+favor of the closed-form flows and decoupled sectors.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+Within a fully declared truncation, the reconstructed gravity--matter system
+has a UV-attractive joint fixed point with 8 relevant, 12 marginal, and 13
+irrelevant directions at the DEP Standard-Model row with Gaussian matter.  All
+33 derived flows are traced to published sources or documented projections and
+are pinned by unit tests; the 8 remaining coordinates are explicitly pending,
+and the curvature-squared sector is documented as having no fixed point in the
+scaffold parametrization.  The accompanying implementation
+(\texttt{outputs/uv\_reconstruction\_41/}) is the precise definition of the
+calculation; this paper is the human-readable record of it.
+
+\section*{Reproducibility}
+\label{sec:repro}
+The complete implementation lives in
+\texttt{outputs/uv\_reconstruction\_41/}.  The verified numbers of this paper
+are regenerated by
+\begin{verbatim}
+  $PY -m unittest discover -s tests
+\end{verbatim}
+(44 tests), with \texttt{PY = /Users/christophermichaelbaird/.cache/}\\[-2pt]
+\texttt{codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3}.
+The joint fixed point and spectrum are produced by
+\texttt{joint\_fixed\_point\_stability.py}; the convention register is
+\texttt{DECLARED\_TRUNCATION\_V0\_1.md}.
+
+\begin{thebibliography}{99}
+
+\bibitem{wetterich} C.~Wetterich, \emph{Exact evolution equation for the
+effective potential}, Phys.\ Lett.\ B 301 (1993) 90, arXiv:hep-ph/9211263.
+
+\bibitem{berges} J.~Berges, N.~Tetu, C.~Wetterich,
+\emph{The effective average action and its flow equation}, Phys.\ Rept.\ 363
+(2002) 223, arXiv:hep-ph/0005122.
+
+\bibitem{reuter} M.~Reuter, \emph{Nonperturbative evolution equation for
+quantum gravity}, Phys.\ Rev.\ D 57 (1998) 971, arXiv:hep-th/9609127.
+
+\bibitem{litim01} D.~F.~Litim, \emph{Optimised renormalisation group flows},
+Phys.\ Rev.\ D 64 (2001) 105007, arXiv:hep-th/0009045.
+
+\bibitem{litim06} D.~F.~Litim, \emph{Fixed points of quantum gravity and the
+renormalisation group}, Phys.\ Rev.\ D 76 (2007) 125001,
+arXiv:hep-th/0606044.
+
+\bibitem{dep14} P.~Don\`a, A.~Eichhorn, R.~Percacci, \emph{Matter matters in
+asymptotically safe quantum gravity}, Phys.\ Rev.\ D 89 (2014) 084035,
+arXiv:1311.2898.
+
+\bibitem{narain10} G.~Narain, R.~Percacci, \emph{On the stability of the
+asymptotic solutions of the Asymptotic Safety program}, Class.\ Quantum
+Grav.\ 27 (2010) 075001, arXiv:0911.0386.
+
+\bibitem{cpr09} A.~Codello, R.~Percacci, C.~Rahmede, \emph{Investigating the
+ultraviolet properties of gravity with a Wilsonian renormalization group
+equation}, Ann.\ Phys.\ (NY) 324 (2009) 414, arXiv:0805.2909.
+
+\bibitem{percacciBook} R.~Percacci, \emph{An Introduction to Covariant
+Quantum Gravity and Asymptotic Safety}, World Scientific (2017).
+
+\end{thebibliography}
+
+\appendix
+
+\section{The declared 41-coordinate operator basis}
+\label{app:operators}
+
+\begin{table}[htbp]
+  \centering
+  \caption{The declared 41-coordinate basis.  $[g_i]$ is the mass dimension
+  of the coupling; the canonical term is $-[g_i]\,g_i$.}
+  \label{tab:operators}
+  \small
+  \begin{tabular}{llc l}
+    \toprule
+    \# & coordinate & $[g_i]$ & operator \\
+    \midrule
+    1  & $g_N$       & $-2$ & $R$ (dimensionless Newton coupling) \\
+    2  & $\lambda_N$ & $+2$ & cosmological term \\
+    3  & $a_{R^2}$   & $-$ & $R^2$ \\
+    4  & $a_{C^2}$   & $-$ & Weyl-squared \\
+    5--7  & $g_1,g_2,g_3$ & $0$ & SM gauge kinetic terms \\
+    8--10 & $y_t,y_b,y_\tau$ & $0$ & third-generation Yukawas \\
+    11,13,15 & $m_H^2,m_\Phi^2,m_E^2$ & $+2$ & scalar masses \\
+    12,14,16 & $\lambda_H,\lambda_\Phi,\lambda_E$ & $0$ & scalar quartics \\
+    17 & $\kappa_{\Phi E}$ & $0$ & $\Phi_c^2 E^2$ \\
+    18--19 & $\kappa_{H\Phi},\kappa_{HE}$ & $0$ & $|H|^2\Phi_c^2$, $|H|^2E^2$ \\
+    20--22 & $\xi_H,\xi_\Phi,\xi_E$ & $0$ & $R|H|^2$, $R\Phi_c^2$, $RE^2$ \\
+    23--25 & $Z_h,Z_\phi,Z_E$ & $0$ & wave-function renormalizations \\
+    26 & $c_{H6}$ & $-2$ & $|H|^6$ \\
+    27 & $c_{\Phi6}$ & $-2$ & $\Phi^6$ \\
+    28 & $c_{E6}$ & $-2$ & $E^6$ \\
+    29--34 & $c_{H4\Phi2},\ldots,c_{\Phi2E4}$ & $-2$ & mixed sixth-order potentials \\
+    35 & $c_{H2\Phi2E2}$ & $-2$ & $|H|^2\Phi^2E^2$ \\
+    36--38 & $c_{H\Box},c_{\Phi\Box},c_{E\Box}$ & $-2$ & $|H|^2\Box|H|^2$, $\Phi^2\Box\Phi^2$, $E^2\Box E^2$ (pending) \\
+    39--41 & $c_{HF^2},c_{\Phi F^2},c_{EF^2}$ & $-2$ & $|H|^2F^2$, $\Phi^2F^2$, $E^2F^2$ (pending) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{The Narain--Percacci five-coupling system}
+\label{app:np}
+
+With $\lambda_0,\xi_0,\lambda_2,\xi_2,\lfour$ as in Sec.~\ref{sec:np},
+$\eta$ from \eqref{eq:solveeta}, $D\equiv\xi_0-\lambda_0$,
+$A\equiv 1+2\lambda_2$, $B\equiv 1+2\xi_2$, and
+$\dot\xi_2\equiv\beta_{\xi_2}$, the transcribed closed forms are
+\begin{align}
+  Z&=\frac{1}{576\pi^2}\Bigg[
+    \frac{A}{D}\Big(9+\frac{39\xi_0}{D}+\frac{60\xi_0^2}{D^2}\Big)
+    +\frac{3(3+32\xi_2)}{D}
+    -\frac{6\xi_0(11+2\xi_2)}{D^2}
+    -\frac{60\xi_0^2 B}{D^3}
+    +\frac{216\xi_2 B^2}{A^3 D}\nonumber\\
+  &\qquad\quad+\frac{9\big(\lambda_0(5-2\xi_2)-2\xi_0B\big)B}{A D^2}
+    +\frac{27B(1-10\xi_2-16\xi_2^2)}{A^2 D}
+    +\frac{108\xi_0\xi_2B^2}{A^2 D^2}\nonumber\\
+  &\qquad\quad+\frac{72\lfour(1+12\xi_2+2\lambda_2)}{A^3}\Bigg],\\
+  W&=\frac{1}{1152\pi^2}\Bigg[
+    \frac{A}{D}\Big(3+\frac{18\xi_0}{D}+\frac{20\xi_0^2}{D^2}\Big)
+    +\frac{15\xi_2}{\xi_0}-\frac{6(1+\xi_2)}{D}
+    -\frac{10\xi_0(3+4\xi_2)}{D^2}
+    -\frac{20\xi_0^2B}{D^3}\nonumber\\
+    &\qquad-\frac{3\big(\lambda_0-\xi_0(5-4\xi_2)\big)B}{A D^2}
+    +\frac{36\xi_0\xi_2B^2}{A^2 D}\Bigg],\\
+  V&=\frac{1}{1152\pi^2}\Bigg[
+    -15+\frac{54\xi_0}{D}+\frac{20\xi_0^2}{D^2}
+    -\frac{6\xi_0(7+2\xi_2)}{A D}\Bigg]
+    \nonumber\\
+  &\quad-\frac{1}{1152\pi^2}\cdot\frac{144\,\xi_0\xi_2\,B}{A^2 D},
+\end{align}
+with $\beta_{\xi_2}$ the solved implicit form
+\begin{equation}
+  \label{eq:xi2solved}
+  \beta_{\xi_2}=\frac{Z+\eta W}{1-V/\xi_0},
+\end{equation}
+and the remaining flows
+\begin{align}
+  \beta_{\lambda_2}&=-2\lambda_2+\frac{1}{48\pi^2}\Bigg[
+    \frac{9\lambda_0 B}{2D^2}-\frac{9(2\lambda_0-\xi_0)B^2}{2 A D^2}\Bigg]
+    \nonumber\\
+  &\qquad-\frac{1}{48\pi^2}\Bigg[
+    \frac{9B^2}{2 A^2 D}+\frac{18\lfour}{A^2}\Bigg]\nonumber\\
+    &\quad+\frac{\eta}{96\pi^2}\Bigg[-\frac{2\xi_2}{\xi_0}
+    +\frac{3\xi_0 B}{2D^2}-\frac{3\xi_0 B^2}{2 A D^2}\Bigg]
+    +\frac{\dot\xi_2}{\xi_0}\cdot\frac{1}{96\pi^2}\Bigg[2
+    -\frac{3\xi_0}{D}+\frac{6\xi_0 B}{A D}\Bigg],\\
+  \beta_{\lfour}&=\frac{1}{48\pi^2}\Bigg[
+    \frac{9}{4D^2}\Big(5A(1+4\xi_2)-B(21+62\xi_2)
+    +\frac{33B^3}{A}-\frac{B^3(23+24\xi_2)}{A^2}+\frac{6B^4}{A^3}\Big)\nonumber\\
+    &\quad+\frac{9\xi_0(\xi_2-\lambda_2)^2}{D^3}\,q
+    -\frac{72\lambda_2\lfour B(1-4\lambda_2+6\xi_2)}{D A^3}
+    +\frac{9\xi_0\lfour\,q}{D^2}+\frac{216\lfour^2}{A^3}\Bigg]\nonumber\\
+    &\quad+\frac{\eta}{96\pi^2}\Bigg[\frac{2\xi_2^2}{\xi_0^2}
+    +\frac{3\xi_0(\xi_2-\lambda_2)^2}{D^3}\,q
+    +\frac{3\xi_0\lfour\,q}{D^2}\Bigg]\nonumber\\
+    &\quad+\frac{\dot\xi_2}{\xi_0}\cdot\frac{1}{96\pi^2}\Bigg[
+    -\frac{2\xi_2}{\xi_0}-\frac{3\xi_0(\xi_2-\lambda_2)}{D^2}
+    \Big(12\frac{B^2}{A^2}-21\frac{B}{A}+10\Big)
+    -\frac{24\xi_0\lfour(1-4\lambda_2+6\xi_2)}{A^2 D}\Bigg],
+\end{align}
+where
+\begin{equation}
+  q=6\frac{B^2}{A^2}-10\frac{B}{A}+5 .
+\end{equation}
+These equations reproduce the paper's GMFP, exponents, and eigenvector
+(Sec.~\ref{sec:np}).
+
+\section{The sextic tensor and its projections}
+\label{app:sextic}
+
+With the potential written $V=c_{abcdef}\,\phi^a\phi^b\phi^c\phi^d\phi^e
+\phi^f/6!$ and the monomial convention of Sec.~\ref{sec:sextic}, the
+$O(4)\times O(1)\times O(1)$ sextic tensor is generated from the ten
+coordinates by the following symmetric assignments (indices $i,j,k\in\{1..4\}$
+label Higgs components, $\Phi=5$, $E=6$; each line is assigned to every
+distinct index pattern):
+\begin{align}
+  \label{eq:tensor}
+  c_{iiiiii}&=90\,c_{H6},\qquad c_{\Phi\Phi\Phi\Phi\Phi\Phi}=90\,c_{\Phi6},
+  \qquad c_{EEEEEE}=90\,c_{E6},\\
+  c_{iiiijj}&=18\,c_{H6},\qquad c_{iijjkk}=6\,c_{H6},\\
+  c_{iiii\Phi\Phi}&=6\,c_{H4\Phi2},\qquad c_{iijj\Phi\Phi}=2\,c_{H4\Phi2},
+  \qquad c_{iiiiEE}=6\,c_{H4E2},\qquad c_{iijjEE}=2\,c_{H4E2},\\
+  c_{ii\Phi\Phi\Phi\Phi}&=6\,c_{H2\Phi4},\qquad c_{iiEEEE}=6\,c_{H2E4},\\
+  c_{\Phi\Phi\Phi\Phi EE}&=6\,c_{\Phi4E2},\qquad c_{\Phi\Phi EEEE}=6\,c_{\Phi2E4},\\
+  c_{ii\Phi\Phi EE}&=c_{H2\Phi2E2}.
+\end{align}
+A unit test reconstructs every monomial from the tensor at generic couplings,
+guaranteeing the convention is enforced.  The projections of the trace
+\eqref{eq:trace} onto the ten operators are
+\begin{align}
+  c_{H6}&=\frac{1}{90}\,\frac{\partial^6}{\partial h^6}\,\dt U_k\Big|_0,
+  \qquad c_{\Phi6}=\frac{1}{90}\,\frac{\partial^6}{\partial\Phi^6}\,\dt U_k\Big|_0,
+  \qquad c_{E6}=\frac{1}{90}\,\frac{\partial^6}{\partial e^6}\,\dt U_k\Big|_0,\\
+  c_{H4\Phi2}&=\frac{1}{6}\,\frac{\partial^6}{\partial h^4\partial\Phi^2}
+    \dt U_k\Big|_0,\qquad\text{etc.},\qquad
+  c_{H2\Phi2E2}=\frac{\partial^6}{\partial h^2\partial\Phi^2\partial e^2}
+    \dt U_k\Big|_0,
+\end{align}
+computed with mixed finite-difference stencils at step
+$\delta=5\times10^{-2}$ in the convergence plateau.
+
+\end{document}
