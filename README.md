@@ -35,10 +35,10 @@ potential trace. It does not include gauge, fermion, metric, or ghost traces.
 
 ## Run
 
-Use the bundled Python runtime:
+Any Python 3.10+ interpreter with NumPy works (set `PY` to yours):
 
 ```sh
-PY=/Users/christophermichaelbaird/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3
+PY=python3
 $PY -m unittest discover -s tests -v
 $PY solve.py --check-reported
 ```
@@ -122,3 +122,7 @@ UV-attractive joint fixed point with **8 relevant**, 12 marginal, and 13
 irrelevant directions.  This is a reconstruction result of the declared
 conventions, not a reproduction of the historical 41-point claim (8 of the 41
 coordinates remain undriven and are recorded as pending).
+
+## Status and license
+
+Theoretical reconstruction and software-validation work; no experimental result is claimed. Text, notes and data: CC BY 4.0 (see `LICENSE`); code may be reused under the same terms.
