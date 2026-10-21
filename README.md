@@ -21,6 +21,15 @@ regulator-dependence checks needed before running the full solver.
 scalar constant-background mass matrix and its d=4 Litim-regulated Wetterich
 potential trace. It does not include gauge, fermion, metric, or ghost traces.
 
+## Continuation audit — 21 October 2026
+
+The [dated continuation audit](docs/continuation_audit_2026-10-21.md) records
+corrected exponent labels, scalar sextic-to-quartic feedback, normalization and
+field-count checks, and the requirements for a consistent full physical flow.
+Its [primary release](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation)
+contains the complete reproducibility package. This update corrects documentation
+and adds the follow-up; the pinned upstream solver is unchanged.
+
 ## What is implemented
 
 - A declared 41-coordinate registry covering gravity, Standard Model gauge/Yukawa/Higgs, two real singlets (`Phi_c`, `E`), non-minimal curvature terms, and dimension-six placeholder operators.
@@ -78,7 +87,7 @@ normalization is deliberately kept distinct from this reconstruction's `gN`.
 It includes the benchmark stability matrix and critical exponents.
 Run `run_einstein_hilbert_benchmark.py` to reproduce its checked values.
 
-## Verified derived blocks and joint fixed point
+## Implemented blocks and formal joint benchmark
 
 Every module below declares its regulator, gauge, and projection convention in
 its docstring and in `DECLARED_TRUNCATION_V0_1.md`; nothing is guessed.
@@ -92,7 +101,7 @@ its docstring and in `DECLARED_TRUNCATION_V0_1.md`; nothing is guessed.
 | R^2 sector | `r2_gravity_cpr.py` | arXiv:0805.2909, one-loop | Negative result recorded: `beta_{a_C2} = 133/(320 pi^2) > 0` constant, no fixed point |
 | 33-coordinate joint flow + spectrum | `partial_flow_41.py`, `joint_fixed_point_stability.py` | DEP gravity + Gaussian matter + NP xi + LPA dim-6 | Verified below |
 
-### Joint fixed point and stability spectrum (33 derived coordinates)
+### Formal joint-system benchmark (33 derived coordinates)
 
 The joint fixed point of the derived 33-coordinate flow is the DEP SM fixed
 point with Gaussian matter: `(lambdaN, gN) = (-4.7975095, 1.7621271)`, all
@@ -105,10 +114,10 @@ Critical exponents `theta = -eigenvalue` of the quantum + canonical Jacobian
 | Classification | theta | Count | Directions |
 |---|---|---|---|
 | Relevant | +3.9609 | 1 | Lambda_tilde |
-| Relevant | +2.8554 | 3 | mH2, mPhi2, mE2 |
-| Relevant | +2.0000 | 3 | xiH, xiPhi, xiE |
+| Relevant | +2.8554 | 3 | xiH, xiPhi, xiE |
+| Relevant | +2.0000 | 3 | mH2, mPhi2, mE2 |
 | Relevant | +1.6436 | 1 | G_tilde |
-| Marginal | 0.0000 | 12 | g1, g2, g3, yt, yb, ytau, six quartics |
+| Linear zero | 0.0000 | 12 | g1, g2, g3, yt, yb, ytau, six quartics |
 | Irrelevant | -0.0756 | 3 | Z_h, Z_phi, Z_E |
 | Irrelevant | -2.0000 | 10 | dimension-six entries |
 
@@ -117,11 +126,15 @@ The two gravity eigenvalues reproduce the DEP table-convention exponents
 one-loop R^2 block has no fixed point) and the six pending derivative/gauge-
 portal coordinates (`c_HBox`, `c_PhiBox`, `c_EBox`, `c_HF2`, `c_PhiF2`, `c_EF2`).
 
-**Verdict:** within the declared truncation, the reconstructed flow has a
-UV-attractive joint fixed point with **8 relevant**, 12 marginal, and 13
-irrelevant directions.  This is a reconstruction result of the declared
-conventions, not a reproduction of the historical 41-point claim (8 of the 41
-coordinates remain undriven and are recorded as pending).
+**Status after the 2026-10-21 audit:** the assembled 33-coordinate numerical
+benchmark has eight positive, twelve zero-linearized, and thirteen negative
+exponents. This formal count does not establish a complete coupled physical UV
+fixed point or its critical-surface dimension. Common background/regulator
+conventions, regular kinetic or essential-coupling coordinates, coupled nonlinear
+analysis, and eight pending coefficient projections remain necessary. The zero
+linearized exponents are not a claim of exact marginality. See the
+[continuation audit](docs/continuation_audit_2026-10-21.md) for the derivations and
+pinned-source comparison.
 
 ## Status and license
 
