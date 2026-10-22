@@ -1,6 +1,6 @@
 # UV continuation audit — 2026-10-21
 
-This note links the ultraviolet reconstruction repository to the [published MQGT-SCF source checkpoint](https://github.com/Cbaird26/mqgt-scf-continued/tree/62e61bf71d991e17f9110b887e4a8dc194b7075a). The report and complete offline package are prepared; GitHub release publication and asset uploads remain pending. The [planned release (pending)](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation) will contain the report, complete offline inputs, new calculation scripts, numerical records, and source hashes.
+This note links the ultraviolet reconstruction repository to the [published MQGT-SCF source checkpoint](https://github.com/Cbaird26/mqgt-scf-continued/tree/7a36e0d741cb8ddb16056d39640ada43e28ad951/research_continuation/2026-10-21). The [published research prerelease](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation) contains the report, complete offline inputs, new calculation scripts, numerical records, checksums, and build provenance. The offline ZIP was reconstructed from the pinned source; compact scientific records and normalized report text are preserved, while regenerated binary outputs carry new documented hashes.
 
 **Audited source:** [`0a644a41eb947509280cbd648996d98bad54bdc5`](https://github.com/Cbaird26/uv-reconstruction-frg/tree/0a644a41eb947509280cbd648996d98bad54bdc5). Findings below apply to that pinned revision. This publication adds a documentation follow-up; it does not modify this repository's upstream solver or represent these corrections as already integrated into it.
 
@@ -50,7 +50,7 @@ The low-energy common action in the wider continuation also permits a broader si
 
 ## Reproduce and inspect
 
-Publication of the full offline ZIP is pending. Once it is available from the [planned release (pending)](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation), extract it and run the following command inside its `uv/` directory:
+Download the full offline ZIP and checksum list from the [published research prerelease](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation). Verify the ZIP hash, extract it, and run the following command inside its `uv/` directory:
 
 ```bash
 python continue_uv.py
