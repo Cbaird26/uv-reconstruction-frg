@@ -26,9 +26,10 @@ potential trace. It does not include gauge, fermion, metric, or ghost traces.
 The [dated continuation audit](docs/continuation_audit_2026-10-21.md) records
 corrected exponent labels, scalar sextic-to-quartic feedback, normalization and
 field-count checks, and the requirements for a consistent full physical flow.
-The [published source checkpoint](https://github.com/Cbaird26/mqgt-scf-continued/tree/62e61bf71d991e17f9110b887e4a8dc194b7075a) contains the continuation source
-and compact records. The report and complete offline package are prepared for the
-[planned release (publication and asset uploads pending)](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation).
+The [published source checkpoint](https://github.com/Cbaird26/mqgt-scf-continued/tree/7a36e0d741cb8ddb16056d39640ada43e28ad951/research_continuation/2026-10-21) contains the continuation source
+and compact records. The report, complete offline package, checksums, and build
+provenance are available in the
+[published research prerelease](https://github.com/Cbaird26/mqgt-scf-continued/releases/tag/v2026.10.21-research-continuation).
 This update corrects documentation and adds the follow-up; the pinned upstream
 solver is unchanged.
 
